@@ -27,21 +27,23 @@
   Snake.prototype.move = function(){
     var newHead;
     var snake = this;
-    switch(snake.dir){
-      case "N": 
-        newHead = snake.segments[0].plus(0,-1);
-        break;
-      case "E": 
-        newHead = snake.segments[0].plus(1,0);
-        break;
-      case "S": 
-        newHead = snake.segments[0].plus(0,1);
-        break;
-      case "W": 
-        newHead = snake.segments[0].plus(-1,0);
-        break;
-        
-    }
+    
+    newHead = snake.segments[0].plus(snake.dir);
+    // switch(snake.dir){
+    //   case "N":
+    //     newHead = snake.segments[0].plus(0,-1);
+    //     break;
+    //   case "E":
+    //     newHead = snake.segments[0].plus(1,0);
+    //     break;
+    //   case "S":
+    //     newHead = snake.segments[0].plus(0,1);
+    //     break;
+    //   case "W":
+    //     newHead = snake.segments[0].plus(-1,0);
+    //     break;
+    //
+    // }
     snake.segments.unshift(newHead);
     if (this.justAteApple) {
       this.justAteApple = false;
@@ -62,15 +64,15 @@
   };
   
   Snake.prototype.turn = function(newDir){
-    // if(this.dir == "E"){
-    //   if(this.dir == "N" || )
-    //   this.dir == "N" && (newDir == "W" || newDir === "E") ||
-    //   this.dir == "S" && (newDir == "W" || newDir === "E") ||
-    //   this.dir == "W" && (newDir == "W" || newDir === "E")
-    // if(newDir == 'E' && this.dir == "W" ){
-    //
-    // } else if()
-    this.dir = newDir;
+    var oppDir = false;
+    for(var i = 0; i < newDir.length; i++){
+      if(this.dir[i] === newDir[i] * -1){
+        oppDir = true
+      }
+    }
+    if(!oppDir){ // [0,1]
+      this.dir = newDir;
+    }
   };
   
   var Coord = S.Coord = function(x, y){
@@ -82,8 +84,8 @@
     return this.x ===  x && this.y === y;
   };
   
-  Coord.prototype.plus = function(dx, dy){
-    return new Coord(this.x + dx, this.y + dy);
+  Coord.prototype.plus = function(dir){
+    return new Coord(this.x + dir[0], this.y + dir[1]);
   };
   
   var Board = S.Board = function(snake, ctx){
@@ -91,7 +93,7 @@
     this.apples = [new Coord(3,4)];
     this.dimensions = 25; 
     this.grid = new Array(this.dimensions);
-    this.tileLength = 18
+    this.tileLength = 20
     this.ctx = ctx
     ctx.fillStyle = 'red';
     var board = this;
@@ -144,7 +146,7 @@
     this.apples.forEach(function(apple){
       console.log("x : " + apple.x + " y: " + apple.y);
       board.ctx.fillStyle = 'green';
-      board.ctx.fillRect(apple.x * board.tileLength, apple.y * board.tileLength, 
+      board.ctx.fillRect(apple.x * board.tileLength + 1, apple.y * board.tileLength + 1, 
          board.tileLength, board.tileLength);
     });
     var head = this.snake.segments[0];

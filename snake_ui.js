@@ -17,18 +17,18 @@
     // view.$doc.on("keydown", function(){console.log("keydown");});
     // view.$doc.on("keydown", view.handleKeyEvent.bind(view));
     key('w', function(){
-      view.snake.turn([-1,0]);
+      view.snake.turn([0,-1]);
      });
      key('s', function(){
-      view.snake.turn([1, 0]);
+      view.snake.turn([0, 1]);
      });
      key('a', function(){
-       view.snake.turn([0, 1]);
+       view.snake.turn([-1, 0]);
      });
      key('d', function(){
-      view.snake.turn([0.-1]);
+      view.snake.turn([1, 0]);
      });
-    view.intervalID = setInterval(view.step.bind(view), 300);
+    view.intervalID = setInterval(view.step.bind(view), 70);
   };
   
   View.prototype.collision = function(){
@@ -45,37 +45,18 @@
   };
   
   View.prototype.step = function(){
-    if(this.collision()){
-      alert("Gameover!");
-      clearInterval(this.intervalID);
-    }
+
     this.board.checkEatApple()
     
     // this.$display.html("<pre>" + this.board.render() + "</pre>");
     this.board.renderTail();
     this.snake.move();
     this.board.renderHead();
+    if(this.collision()){
+      alert("Gameover!");
+      clearInterval(this.intervalID);
+    }
     // this.board.checkEatApple();
   };
-  
-  View.prototype.handleKeyEvent = function(event){
-    var key = event.keyCode;
-    switch(key){
-    case 38:
-
-      break;
-    case 40:
-
-      break;
-    case 37:
-
-      break;
-    case 39:
-
-      break;
-    }
-  };
-  
-
-  
+    
 })(this);
