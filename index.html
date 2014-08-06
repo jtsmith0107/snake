@@ -3,6 +3,7 @@
 <head> 
   <title>Snake </title>
   <link rel = "stylesheet" href = "snake.css">
+  <script src = "keymaster.js"></script>
   <script src = "jquery.js"></script>
   <script src = "underscore.js"></script>
   <script src = "snake.js"></script>
@@ -11,12 +12,14 @@
 </head>
 <body>
   <h1>Welcome to Snake!</h1>
-  
+  <canvas width='500' height='500'>
   <div id = "board"></div>
   <script type="text/javascript">
     $(function(){
-      var game = new S.View($(document), $('#board'));
-      game.start();
+      var canvas = document.getElementsByTagName('canvas')[0];
+      new S.View(canvas).start();
+      // var canvas = new S.View($(document), $('#board'));
+      // game.start();
     })
   </script>
   

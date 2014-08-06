@@ -2,7 +2,7 @@
   var S = root.S = (root.S || {});
   
   var Snake = S.Snake = function(){
-    this.dir = "E";
+    this.dir = [1,0];
     this.segments = [
     new Coord(0,0),
     new Coord(0,1),
@@ -12,7 +12,6 @@
     ];
     this.justAteApple = false;
   };
-  
   
   Snake.prototype.hasSegment = function(x,y){
     var hasSeg = false;
@@ -43,7 +42,6 @@
         break;
         
     }
-    
     snake.segments.unshift(newHead);
     if (this.justAteApple) {
       this.justAteApple = false;
@@ -64,6 +62,14 @@
   };
   
   Snake.prototype.turn = function(newDir){
+    // if(this.dir == "E"){
+    //   if(this.dir == "N" || )
+    //   this.dir == "N" && (newDir == "W" || newDir === "E") ||
+    //   this.dir == "S" && (newDir == "W" || newDir === "E") ||
+    //   this.dir == "W" && (newDir == "W" || newDir === "E")
+    // if(newDir == 'E' && this.dir == "W" ){
+    //
+    // } else if()
     this.dir = newDir;
   };
   
@@ -80,11 +86,20 @@
     return new Coord(this.x + dx, this.y + dy);
   };
   
-  var Board = S.Board = function(snake){
+  var Board = S.Board = function(snake, ctx){
     this.snake = snake;
-    this.apples = [new Coord(1,2)];
-    this.dimensions = 10; 
+    this.apples = [new Coord(3,4)];
+    this.dimensions = 25; 
     this.grid = new Array(this.dimensions);
+    this.tileLength = 18
+    this.ctx = ctx
+    ctx.fillStyle = 'red';
+    var board = this;
+    _.each(this.snake.segments, function(segment){
+      ctx.fillRect(segment.x * board.tileLength, segment.y * board.tileLength, 
+         board.tileLength, board.tileLength);
+    });
+    
   };
   
   Board.prototype.hasApple = function(x,y){
@@ -101,29 +116,66 @@
   Board.prototype.checkEatApple = function(){
     var head = this.snake.segments[0];
     var apple = this.hasApple(head.x, head.y);
-    debugger;
-    if (apple !== false){
+    if(apple){
       this.snake.justAteApple = true;
+      var x = Math.floor(Math.random()*this.board.tileLength);
+      var y = Math.floor(Math.random()*this.board.tileLength);
+      var newApple = new Coord(x,y);
+
+      this.apples << newApple
+    }
+  };
+  
+  Board.prototype.renderTail = function(){
+    var head = this.snake.segments[0];
+    var apple = this.hasApple(head.x, head.y);
+    if (apple === false){  
+      var tail = this.snake.segments.slice(-1)[0];
+      this.ctx.fillStyle = 'white';
+      this.ctx.fillRect( tail.x * this.tileLength, tail.y * this.tileLength, 
+         this.tileLength, this.tileLength);
       this.apples.splice(this.apples.indexOf(apple),1);
     }
   };
   
-  Board.prototype.render = function() {
-    for(var i = 0; i < this.dimensions; i++){
-      this.grid[i] = "";
-      for(var j = 0; j< this.dimensions; j++){
-        if(this.hasApple(j,i)){
-          this.grid[i] += "A";
-        }
-        else if(this.snake.hasSegment(j,i)){
-          this.grid[i] += "X";
-        }
-        else {
-          this.grid[i] += ".";
-        }
-      }
-    }
-    return this.grid.join("\n");
+  Board.prototype.renderHead = function() {
+
+    var board = this;
+    this.apples.forEach(function(apple){
+      console.log("x : " + apple.x + " y: " + apple.y);
+      board.ctx.fillStyle = 'green';
+      board.ctx.fillRect(apple.x * board.tileLength, apple.y * board.tileLength, 
+         board.tileLength, board.tileLength);
+    });
+    var head = this.snake.segments[0];
+    // console.log("x : " + head.x + " y: " + head.y);
+
+    this.ctx.fillStyle = 'red';
+    this.ctx.fillRect(head.x * this.tileLength, head.y * this.tileLength, 
+       this.tileLength, this.tileLength);
+       
+
+
+       // this.grid[i] += ".";
+    //
+    // for(var i = 0; i < this.dimensions; i++){
+    //   this.grid[i] = "";
+    //   for(var j = 0; j< this.dimensions; j++){
+    //     if(this.hasApple(j,i)){
+    //
+    //       this.grid[i] += "A";
+    //     }
+    //     else if(this.snake.hasSegment(j,i)){
+    //
+    //
+    //       this.grid[i] += "X";
+    //     }
+    //     else {
+    //
+    //     }
+    //   }
+    // }
+    // return this.grid.join("\n");
   };
   
 })(this);
