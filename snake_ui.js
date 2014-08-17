@@ -53,7 +53,7 @@
     this.snake.move();
     this.board.renderHead();
     if(this.collision()){
-      alert("Gameover!");
+      alert("Gameover!\n Your score was " + this.snake.segments.length);
       clearInterval(this.intervalID);
     }
     // this.board.checkEatApple();

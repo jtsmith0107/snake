@@ -29,21 +29,7 @@
     var snake = this;
     
     newHead = snake.segments[0].plus(snake.dir);
-    // switch(snake.dir){
-    //   case "N":
-    //     newHead = snake.segments[0].plus(0,-1);
-    //     break;
-    //   case "E":
-    //     newHead = snake.segments[0].plus(1,0);
-    //     break;
-    //   case "S":
-    //     newHead = snake.segments[0].plus(0,1);
-    //     break;
-    //   case "W":
-    //     newHead = snake.segments[0].plus(-1,0);
-    //     break;
-    //
-    // }
+
     snake.segments.unshift(newHead);
     if (this.justAteApple) {
       this.justAteApple = false;
@@ -95,7 +81,7 @@
     this.grid = new Array(this.dimensions);
     this.tileLength = 20
     this.ctx = ctx
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = '#FD7400';
     var board = this;
     _.each(this.snake.segments, function(segment){
       ctx.fillRect(segment.x * board.tileLength, segment.y * board.tileLength, 
@@ -109,7 +95,7 @@
     var board = this;
     board.apples.forEach(function(coord){
       if(coord.atPos(x,y)){
-        hasA = board.apples.indexOf(coord);
+        hasA = true;
       }
     });
     return hasA;
@@ -120,23 +106,26 @@
     var apple = this.hasApple(head.x, head.y);
     if(apple){
       this.snake.justAteApple = true;
-      var x = Math.floor(Math.random()*this.board.tileLength);
-      var y = Math.floor(Math.random()*this.board.tileLength);
+      this.apples.splice(0);
+      var x = Math.floor(Math.random() * this.tileLength);
+      var y = Math.floor(Math.random() * this.tileLength);
+      
       var newApple = new Coord(x,y);
-
-      this.apples << newApple
+      
+      this.apples.push(newApple);
     }
   };
   
   Board.prototype.renderTail = function(){
     var head = this.snake.segments[0];
+   
     var apple = this.hasApple(head.x, head.y);
-    if (apple === false){  
+     //the snake has eaten an apple this step
+    if (this.snake.justAteApple === false){  
       var tail = this.snake.segments.slice(-1)[0];
-      this.ctx.fillStyle = 'white';
+      this.ctx.fillStyle = '#1F8A70';
       this.ctx.fillRect( tail.x * this.tileLength, tail.y * this.tileLength, 
          this.tileLength, this.tileLength);
-      this.apples.splice(this.apples.indexOf(apple),1);
     }
   };
   
@@ -145,39 +134,17 @@
     var board = this;
     this.apples.forEach(function(apple){
       console.log("x : " + apple.x + " y: " + apple.y);
-      board.ctx.fillStyle = 'green';
-      board.ctx.fillRect(apple.x * board.tileLength + 1, apple.y * board.tileLength + 1, 
+      board.ctx.fillStyle = '#BEDB39';
+      board.ctx.fillRect(apple.x * board.tileLength, apple.y * board.tileLength, 
          board.tileLength, board.tileLength);
     });
     var head = this.snake.segments[0];
     // console.log("x : " + head.x + " y: " + head.y);
 
-    this.ctx.fillStyle = 'red';
+    this.ctx.fillStyle = '#FD7400';
     this.ctx.fillRect(head.x * this.tileLength, head.y * this.tileLength, 
        this.tileLength, this.tileLength);
        
-
-
-       // this.grid[i] += ".";
-    //
-    // for(var i = 0; i < this.dimensions; i++){
-    //   this.grid[i] = "";
-    //   for(var j = 0; j< this.dimensions; j++){
-    //     if(this.hasApple(j,i)){
-    //
-    //       this.grid[i] += "A";
-    //     }
-    //     else if(this.snake.hasSegment(j,i)){
-    //
-    //
-    //       this.grid[i] += "X";
-    //     }
-    //     else {
-    //
-    //     }
-    //   }
-    // }
-    // return this.grid.join("\n");
   };
   
 })(this);
